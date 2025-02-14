@@ -37,7 +37,6 @@ export class UsersListComponent implements OnInit, OnDestroy {
       this.users$.pipe(map(users => users.length))
     ]).pipe(
       map(([users, userCount]) => {
-        // Check if all users are active and count is less than 5
         const allActive = users.every(user => user.active);
         return allActive && userCount < 5;
       })
@@ -53,7 +52,7 @@ export class UsersListComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('User added:', result); //maybe some toas notification will be nice
+        console.log('User added:', result); 
       }
     });
   }
