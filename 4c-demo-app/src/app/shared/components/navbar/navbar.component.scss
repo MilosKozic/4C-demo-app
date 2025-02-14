@@ -28,7 +28,7 @@
     gap: 30px;
 }
 
-.navbar-links li a {
+.links {
     color: white;
     text-decoration: none;
     font-size: 1rem;
@@ -51,4 +51,12 @@
 
 .navbar-actions .btn-login:hover {
     background-color: #d57c00;
+}
+
+.active-link {
+    color: #007bff;
+}
+
+.active-link:hover {
+    background-color: transparent;
 }

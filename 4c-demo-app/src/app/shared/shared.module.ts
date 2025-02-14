@@ -6,10 +6,17 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [TableComponent, NavbarComponent, SidebarComponent],
-  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatSortModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+  ],
   exports: [TableComponent, NavbarComponent, SidebarComponent],
 })
 export class SharedModule {}
