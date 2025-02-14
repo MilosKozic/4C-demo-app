@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { User } from '../user.store';
-import { Observable } from 'rxjs';
+import { combineLatest, map, Observable, Subject, takeUntil } from 'rxjs';
 import { UserQuery } from '../user.query';
 import { DataService } from 'src/app/core/services/data.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -9,52 +9,74 @@ import { UserModalComponent } from 'src/app/shared/components/user-modal/user-mo
 @Component({
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.scss']
+  styleUrls: ['./users-list.component.scss'],
 })
-export class UsersListComponent implements OnInit {
-  users$: Observable<User[]>; 
+export class UsersListComponent implements OnInit, OnDestroy {
+  unsubscribe$ = new Subject<void>();
+
+  users$: Observable<User[]>;
+  isAddUserButtonEnabled$: Observable<boolean>;
   newUserName: string = '';
   newUserActive: boolean = true;
 
   headersData = [
     { columnDef: 'id', header: 'ID' },
     { columnDef: 'name', header: 'Name' },
-    { columnDef: 'active', header: 'Active' }
+    { columnDef: 'active', header: 'Active' },
   ];
 
-  constructor(private dataService: DataService, private userQuery: UserQuery, private dialog: MatDialog) {
-    this.users$ = this.userQuery.selectAll();  // Get the users from the store
+  constructor(
+    private dataService: DataService,
+    private userQuery: UserQuery,
+    private dialog: MatDialog
+  ) {
+    this.users$ = this.userQuery.selectAll();
+
+    this.isAddUserButtonEnabled$ = combineLatest([
+      this.users$,
+      this.users$.pipe(map(users => users.length))
+    ]).pipe(
+      map(([users, userCount]) => {
+        // Check if all users are active and count is less than 5
+        const allActive = users.every(user => user.active);
+        return allActive && userCount < 5;
+      })
+    );
   }
 
   ngOnInit(): void {
-    this.dataService.getUsers().subscribe();
+    this.dataService.getUsers().pipe(takeUntil(this.unsubscribe$)).subscribe();
   }
 
   openAddUserDialog(): void {
     const dialogRef = this.dialog.open(UserModalComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        console.log('User added:', result);
-        // Handle user data (e.g., add it to your list of users)
+        console.log('User added:', result); //maybe some toas notification will be nice
       }
     });
   }
 
   addUser(): void {
     if (this.newUserName.trim() === '') {
-      return; 
+      return;
     }
 
     const newUser: User = {
-      id: 0, 
+      id: 0,
       name: this.newUserName,
       active: this.newUserActive,
     };
 
     this.dataService.addUser(newUser).subscribe(() => {
-      this.newUserName = ''; 
+      this.newUserName = '';
       this.newUserActive = true;
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

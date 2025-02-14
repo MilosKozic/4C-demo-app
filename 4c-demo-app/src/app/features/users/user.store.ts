@@ -1,7 +1,7 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 export interface User {
-  id: number;
+  id: number | string;
   name: string;
   active: boolean;
 }

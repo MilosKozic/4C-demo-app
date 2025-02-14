@@ -9,6 +9,9 @@
       <mat-error *ngIf="userForm.get('name')?.hasError('required')">
         Name is required
       </mat-error>
+      <mat-error *ngIf="userForm.get('name')?.hasError('nameTaken')">
+        This name is already taken.
+      </mat-error>
     </mat-form-field>
 
     <mat-checkbox formControlName="active">Active</mat-checkbox>
