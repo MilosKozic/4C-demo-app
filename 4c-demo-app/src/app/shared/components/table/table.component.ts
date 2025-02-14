@@ -6,10 +6,10 @@ import { MatSort } from '@angular/material/sort';
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+  styleUrls: ['./table.component.scss'],
 })
 export class TableComponent implements OnInit {
-  displayedColumns: string[]=[];
+  displayedColumns: string[] = [];
   private _headersData: any;
 
   get headersData(): any[] | null {
@@ -22,13 +22,13 @@ export class TableComponent implements OnInit {
       if (!header.hidden) this.displayedColumns.push(header.columnDef);
     });
   }
-  
+
   dataSource!: MatTableDataSource<any>;
   tableDataSource!: any[];
 
   @Input() set tableData(value: any[] | null) {
-    console.log({value})
-    this.tableDataSource = value || []
+    console.log({ value });
+    this.tableDataSource = value || [];
     this.dataSource = new MatTableDataSource<any>(value ? value : []);
     this._tableData = value;
   }
@@ -37,13 +37,10 @@ export class TableComponent implements OnInit {
     return this._tableData;
   }
 
-  private _tableData!:any[] | null;
+  private _tableData!: any[] | null;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | undefined;
   @ViewChild(MatSort) sort: MatSort | undefined;
 
-  ngOnInit() {
-
-  }
-
+  ngOnInit() {}
 }

@@ -1,6 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-
 export interface User {
   id: number;
   name: string;
@@ -11,20 +10,24 @@ export interface UserState {
   users: User[];
 }
 
+export function createInitialState(): UserState {
+  return {
+    users: [],
+  };
+}
+
 @StoreConfig({ name: 'users' })
 @Injectable({ providedIn: 'root' })
 export class UserStore extends Store<UserState> {
   constructor() {
-    super({ users: [] });
+    super(createInitialState());
   }
 
-  updateUsers(users: User[]) {
-    this.update((state) => ({ ...state, users }));
-  }
-
+  // Optionally, add methods to update the store
   addUser(user: User) {
-    this.update((state) => ({
-      users: [...state.users, user],
-    }));
+    const currentState = this.getValue();
+    this.update({
+      users: [...currentState.users, user],  // Add new user to the existing users list
+    });
   }
 }

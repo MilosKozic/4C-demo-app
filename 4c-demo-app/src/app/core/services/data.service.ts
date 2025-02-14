@@ -12,6 +12,7 @@ export class DataService {
 
   // Get users using Akita store
   getUsers(): Observable<User[]> {
+    // If there are no users in the store, fetch and add mock users
     const users = this.userQuery.getValue().users;
     if (users.length === 0) {
       const mockUsers: User[] = [
@@ -19,14 +20,16 @@ export class DataService {
         { id: 2, name: 'Jane Smith', active: false },
         { id: 3, name: 'Alice Johnson', active: true },
       ];
-      this.userStore.updateUsers(mockUsers);
-      return of(mockUsers).pipe(delay(1000));
+      this.userStore.update({ users: mockUsers });  // Use update to set the users in the store
     }
-    return of(users);
+    return of(this.userQuery.getValue().users).pipe(delay(1000));  // Return the users from the store
   }
 
+  // Add user to the store
   addUser(user: User): Observable<User> {
-    this.userStore.addUser(user); 
-    return of(user).pipe(delay(500)); 
+    const currentUsers = this.userQuery.getValue().users;
+    const updatedUser = { ...user, id: currentUsers.length + 1 }; // Assign an ID, based on length of current users
+    this.userStore.update({ users: [...currentUsers, updatedUser] }); // Add new user to the store
+    return of(updatedUser).pipe(delay(500));  // Simulate server delay
   }
 }

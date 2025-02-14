@@ -3,6 +3,8 @@ import { User } from '../user.store';
 import { Observable } from 'rxjs';
 import { UserQuery } from '../user.query';
 import { DataService } from 'src/app/core/services/data.service';
+import { MatDialog } from '@angular/material/dialog';
+import { UserModalComponent } from 'src/app/shared/components/user-modal/user-modal.component';
 
 @Component({
   selector: 'app-users-list',
@@ -20,12 +22,23 @@ export class UsersListComponent implements OnInit {
     { columnDef: 'active', header: 'Active' }
   ];
 
-  constructor(private dataService: DataService, private userQuery: UserQuery) {
-    this.users$ = this.userQuery.users$; 
+  constructor(private dataService: DataService, private userQuery: UserQuery, private dialog: MatDialog) {
+    this.users$ = this.userQuery.selectAll();  // Get the users from the store
   }
 
   ngOnInit(): void {
     this.dataService.getUsers().subscribe();
+  }
+
+  openAddUserDialog(): void {
+    const dialogRef = this.dialog.open(UserModalComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        console.log('User added:', result);
+        // Handle user data (e.g., add it to your list of users)
+      }
+    });
   }
 
   addUser(): void {

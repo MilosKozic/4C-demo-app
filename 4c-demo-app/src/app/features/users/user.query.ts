@@ -1,15 +1,17 @@
-import { Query } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { UserStore, UserState } from './user.store';
+import { Query } from '@datorama/akita';
+import { User, UserStore } from './user.store';
+import { UserState } from './user.store';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class UserQuery extends Query<UserState> {
-  constructor(store: UserStore) {
+  constructor( store: UserStore) {
     super(store);
   }
 
-  // You can create selectors to get parts of the state
-  get users$() {
-    return this.select((state) => state.users);
+  // Select all users as an observable
+  selectAll(): Observable<User[]> {
+    return this.select(state => state.users);
   }
 }

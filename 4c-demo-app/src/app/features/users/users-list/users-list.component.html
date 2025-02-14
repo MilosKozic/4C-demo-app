@@ -1,5 +1,5 @@
   <div class="users-layout">
-    <button mat-flat-button (click)="addUser()" class="users-button">
+    <button mat-flat-button (click)="openAddUserDialog()" class="users-button">
       Add User
     </button>
     <app-table [headersData]="headersData" [tableData]="users$ | async"> </app-table>
