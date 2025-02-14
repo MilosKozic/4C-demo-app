@@ -15,19 +15,19 @@ export class TableComponent implements OnInit {
   get headersData(): any[] | null {
     return this._headersData;
   }
-  // Input properties for columns and dataSource
   @Input() set headersData(value: any[] | null) {
     this._headersData = value;
-     this.displayedColumns = [];      
-    this.headersData?.forEach((header:any) => {
-      if (!header.hidden) this.displayedColumns.push(header.key);
+    this.displayedColumns = [];
+    this.headersData?.forEach((header: any) => {
+      if (!header.hidden) this.displayedColumns.push(header.columnDef);
     });
-
   }
+  
   dataSource!: MatTableDataSource<any>;
   tableDataSource!: any[];
 
   @Input() set tableData(value: any[] | null) {
+    console.log({value})
     this.tableDataSource = value || []
     this.dataSource = new MatTableDataSource<any>(value ? value : []);
     this._tableData = value;

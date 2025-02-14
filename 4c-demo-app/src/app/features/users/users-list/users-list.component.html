@@ -1,1 +1,6 @@
-<app-table [headersData]="headersData" [tableData]="tableData"> </app-table>
+  <div class="users-layout">
+    <button mat-flat-button (click)="addUser()" class="users-button">
+      Add User
+    </button>
+    <app-table [headersData]="headersData" [tableData]="users$ | async"> </app-table>
+  </div>
